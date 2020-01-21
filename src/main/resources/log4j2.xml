@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+    <Properties>
+        <!-- 如下设置为日志默认输出路径,当前用户主目录,如果需要设置,可以在JVM设置类似:
+            -DLOG_HOME=/Users/kyle/Develop/car-loan/carloan/web/target/logs
+        -->
+        <Property name="LOG_HOME">${sys:user.home}/logs</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
+        </Console>
+
+        <RollingRandomAccessFile name="RollingRandomAccessFile" fileName="${LOG_HOME}/springboot-demo.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyy-MM}/springboot-demo-%d{MM-dd-yyyy}-%i.log.gz">
+            <Filters>
+                <!--只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+                <!--level ="debug" 打印sql到文件-->
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <!--<Policies>-->
+
+            <!--<OnStartupTriggeringPolicy />-->
+            <!--&lt;!&ndash;按天分割&ndash;&gt;-->
+            <!--<TimeBasedTriggeringPolicy interval="24" modulate="true"/>-->
+            <!--</Policies>-->
+
+            <Policies>
+                <!-- 每天生成一个日志文件 -->
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <!-- 每到100M生成一个日志文件 -->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+
+            <!-- 单天最大保存文件数 超过自动覆盖-->
+            <DefaultRolloverStrategy max="50"/>
+        </RollingRandomAccessFile>
+
+    </Appenders>
+
+    <loggers>
+        <AsyncLogger level="debug" name="com.panchina.springboot.mapper">
+            <AppenderRef ref="RollingRandomAccessFile"/>
+        </AsyncLogger>
+        <AsyncRoot level="info">
+            <AppenderRef ref="RollingRandomAccessFile" />
+            <!--生产环境控制台不打可注释-->
+            <AppenderRef ref="console"/>
+        </AsyncRoot>
+    </loggers>
+</Configuration>

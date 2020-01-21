@@ -1,0 +1,37 @@
+
+
+
+
+
+server:
+  port: 10010
+
+logging:
+  config: classpath:log4j2.xml
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      db-type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:mysql://172.18.100.219:3306/lifei_test?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
+      username: root
+      password: 123456
+      max-active: 50
+      max-wait: 10000
+      initial-size: 8
+
+#freemarker配置
+  freemarker:
+    suffix: .ftl
+    template-loader-path: classpath:/templates/
+  mvc:
+    static-path-pattern: /static/**
+
+
+#mybatis配置
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.panchina.springboot.domain.entity
+  config-location: classpath:mybatis-config.xml
